@@ -6,38 +6,124 @@ class CartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "Keranjang Anda",
-            style: CustomTheme.Title,
-          ),
-          backgroundColor: CustomTheme.Background,
-          elevation: 0.5,
+      appBar: AppBar(
+        title: Text(
+          "Keranjang Anda",
+          style: CustomTheme.Title,
         ),
-        body: Container(
-          child: ListView(
-            children: [
-              ItemCart(
-                productName: "Nike Air Zoom Pegasus 36 Miami",
-                image: Image.asset(
-                  "assets/image_47.png",
-                  height: 80,
-                ),
-                price: 2000000,
-                favorite: true,
+        backgroundColor: CustomTheme.Background,
+        elevation: 0.5,
+      ),
+      body: Container(
+        child: ListView(
+          children: [
+            ItemCart(
+              productName: "Nike Air Zoom Pegasus 36 Miami",
+              image: Image.asset(
+                "assets/image_47.png",
+                height: 80,
               ),
-              ItemCart(
-                productName: "Nike Air Zoom Pegasus 36 Miami",
-                image: Image.asset(
-                  "assets/image_49.png",
-                  height: 80,
+              price: 2000000,
+              favorite: true,
+            ),
+            ItemCart(
+              productName: "Nike Air Zoom Pegasus 36 Miami",
+              image: Image.asset(
+                "assets/image_49.png",
+                height: 80,
+              ),
+              price: 2000000,
+              favorite: false,
+            )
+          ],
+        ),
+      ),
+      bottomSheet: Container(
+        height: 100,
+        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [BoxShadow(color: Colors.grey)],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Flex(
+              direction: Axis.horizontal,
+              children: [
+                Flexible(
+                  child: TextField(
+                    decoration: InputDecoration(
+                        hintText: "Masukan code voucher",
+                        hintStyle:
+                            TextStyle(color: CustomTheme.Grey, fontSize: 12),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(3),
+                              bottomLeft: Radius.circular(3)),
+                          borderSide: BorderSide(
+                            color: CustomTheme.Light,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(3),
+                              bottomLeft: Radius.circular(3)),
+                          borderSide: BorderSide(
+                            color: CustomTheme.Blue,
+                          ),
+                        ),
+                        isDense: true,
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 8)),
+                  ),
+                  flex: 3,
                 ),
-                price: 2000000,
-                favorite: false,
-              )
-            ],
-          ),
-        ));
+                Flexible(
+                    flex: 1,
+                    fit: FlexFit.tight,
+                    child: OutlinedButton(
+                      onPressed: () {},
+                      child: Text(
+                        "Check",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(CustomTheme.Blue),
+                        side: MaterialStateProperty.all(BorderSide.none),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(3),
+                              bottomRight: Radius.circular(3),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ))
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Total : ",
+                  style: TextStyle(
+                      color: CustomTheme.Dark, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  "Rp. 4000000",
+                  style: TextStyle(
+                      color: CustomTheme.Blue, fontWeight: FontWeight.bold),
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
 

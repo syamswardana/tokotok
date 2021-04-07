@@ -23,7 +23,7 @@ class ItemCategory extends StatelessWidget {
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: CustomTheme.Grey)),
+                      border: Border.all(color: CustomTheme.Light)),
                   child: icon,
                 ),
                 onPressed: () {}),

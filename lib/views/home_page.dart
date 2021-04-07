@@ -37,8 +37,12 @@ class Homapage extends StatelessWidget {
             child: TextFormField(
               decoration: InputDecoration(
                   contentPadding: EdgeInsets.all(0),
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.search)),
+                  border: OutlineInputBorder(
+                      borderSide: BorderSide(color: CustomTheme.Light)),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: CustomTheme.Blue,
+                  )),
             ),
           )),
           IconButton(
