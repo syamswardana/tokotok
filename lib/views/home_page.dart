@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tokotok/base%20views/card_product.dart';
-import 'package:tokotok/base%20views/item_category.dart';
+import 'package:tokotok/baseviews/card_product.dart';
+import 'package:tokotok/baseviews/item_category.dart';
+import 'package:tokotok/baseviews/offer_item.dart';
 import 'package:tokotok/views/custom_theme.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 
@@ -8,19 +9,19 @@ class Homapage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     PageController offersController = new PageController();
-    List<OfferPage> offers = [];
+    List<OfferItem> offers = [];
     int indexPage = 0;
-    offers.add(OfferPage(
+    offers.add(OfferItem(
       title: "Super Flash Sale",
       subtitle: "30 Maret sampai 2 April",
       color: CustomTheme.Blue,
     ));
-    offers.add(OfferPage(
+    offers.add(OfferItem(
       title: "Mega Electronic Sale",
       subtitle: "30 Maret sampai 2 April",
       color: CustomTheme.Purple,
     ));
-    offers.add(OfferPage(
+    offers.add(OfferItem(
       title: "Mandiri Discount",
       subtitle: "30 Maret sampai 2 April",
       color: CustomTheme.Yellow,
@@ -28,19 +29,24 @@ class Homapage extends StatelessWidget {
     return Scaffold(
       backgroundColor: CustomTheme.Background,
       appBar: AppBar(
-        elevation: 0,
+        elevation: 0.5,
         backgroundColor: CustomTheme.Background,
         actions: [
           Expanded(
               child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 10, 5, 5),
+            padding: const EdgeInsets.fromLTRB(20, 10, 5, 10),
             child: TextFormField(
+              style: TextStyle(fontSize: 14, color: CustomTheme.Dark),
               decoration: InputDecoration(
                   contentPadding: EdgeInsets.all(0),
-                  border: OutlineInputBorder(
-                      borderSide: BorderSide(color: CustomTheme.Light)),
+                  enabledBorder: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: CustomTheme.Light, width: 1.5)),
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: CustomTheme.Blue)),
                   prefixIcon: Icon(
                     Icons.search,
+                    size: 18,
                     color: CustomTheme.Blue,
                   )),
             ),
@@ -255,36 +261,6 @@ class Homapage extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class OfferPage extends StatelessWidget {
-  final Color color;
-  final String title;
-  final String subtitle;
-  final String urlBackground;
-  OfferPage({this.color, this.title, this.subtitle, this.urlBackground});
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
-          ),
-          Text(subtitle, style: TextStyle(color: Colors.white, fontSize: 16))
-        ],
-      ),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          color: color != null ? color : null,
-          image: (urlBackground == null)
-              ? null
-              : DecorationImage(image: NetworkImage(urlBackground))),
     );
   }
 }

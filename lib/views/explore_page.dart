@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:tokotok/base%20views/item_category.dart';
+import 'package:tokotok/baseviews/item_category.dart';
 import 'package:tokotok/views/custom_theme.dart';
 
 class ExplorePage extends StatelessWidget {
@@ -13,12 +13,20 @@ class ExplorePage extends StatelessWidget {
         actions: [
           Expanded(
               child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 10, 5, 5),
+            padding: const EdgeInsets.fromLTRB(20, 10, 5, 10),
             child: TextFormField(
               decoration: InputDecoration(
                   contentPadding: EdgeInsets.all(0),
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.search)),
+                  enabledBorder: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: CustomTheme.Light, width: 1.5)),
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: CustomTheme.Blue)),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    size: 18,
+                    color: CustomTheme.Blue,
+                  )),
             ),
           )),
           IconButton(

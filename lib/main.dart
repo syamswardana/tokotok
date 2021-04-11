@@ -3,6 +3,8 @@ import 'package:tokotok/views/home_page.dart';
 import 'package:tokotok/views/login_form.dart';
 import 'package:tokotok/views/login_page.dart';
 import 'package:tokotok/views/navigation.dart';
+import 'package:tokotok/views/product_detail.dart';
+import 'package:tokotok/views/shiping_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Navigation(),
+      home: ShippingPage(),
     );
   }
 }

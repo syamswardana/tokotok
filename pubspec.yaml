@@ -29,6 +29,7 @@ dependencies:
   flutter_svg: ^0.21.0-nullsafety.0
   font_awesome_flutter: ^9.0.0
   intl: ^0.17.0
+  flutter_rating_bar: ^4.0.0
 
 dev_dependencies:
   flutter_test:
@@ -64,6 +65,7 @@ flutter:
     - assets/image_47.png
     - assets/image_54.png
     - assets/image_49.png
+    - assets/product_image.png
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
