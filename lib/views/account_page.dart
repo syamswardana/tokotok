@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tokotok/firebase/auth_services.dart';
 import 'package:tokotok/views/custom_theme.dart';
 
 class AccountPage extends StatelessWidget {
@@ -6,7 +7,7 @@ class AccountPage extends StatelessWidget {
   Widget build(BuildContext context) {
     ButtonStyle menuStyle = ButtonStyle(
       alignment: Alignment.centerLeft,
-      visualDensity: VisualDensity.compact,
+      visualDensity: VisualDensity.standard,
       minimumSize: MaterialStateProperty.all(Size(double.infinity, 60)),
     );
     return Scaffold(
@@ -16,7 +17,7 @@ class AccountPage extends StatelessWidget {
         elevation: 0.5,
         title: Text(
           "Akun",
-          style: CustomTheme.Title.copyWith(fontSize: 14),
+          style: TextStyle(color: CustomTheme.Dark),
         ),
       ),
       body: SingleChildScrollView(
@@ -71,6 +72,20 @@ class AccountPage extends StatelessWidget {
               ),
               style: menuStyle,
             ),
+            TextButton.icon(
+              onPressed: () async {
+                await AuthServices.signOut();
+              },
+              icon: Icon(
+                Icons.logout,
+                color: CustomTheme.Red,
+              ),
+              label: Text(
+                "Logout",
+                style: TextStyle(color: CustomTheme.Dark),
+              ),
+              style: menuStyle,
+            )
           ],
         ),
       ),

@@ -23,13 +23,23 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  cloud_firestore: ^1.0.4
   cupertino_icons: ^1.0.0
   dots_indicator: ^2.0.0
+  equatable: ^2.0.0
+  firebase_auth: ^1.0.3
+  firebase_core: ^1.0.3
+  firebase_storage: ^8.0.3
+  flutter_bloc: ^7.0.0
   flutter_launcher_icons: ^0.9.0
+  flutter_rating_bar: ^4.0.0
   flutter_svg: ^0.21.0-nullsafety.0
   font_awesome_flutter: ^9.0.0
+  google_fonts: ^2.0.0
+  google_sign_in: ^4.5.1
   intl: ^0.17.0
-  flutter_rating_bar: ^4.0.0
+  provider: ^5.0.0
+  shimmer: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -61,11 +71,14 @@ flutter:
     - assets/icons/woman_skirt.svg
     - assets/icons/logo_white.png
     - assets/icons/logo_blue.png
+    - assets/icons/facebook.svg
+    - assets/icons/gmail.svg
     - assets/image_46.png
     - assets/image_47.png
     - assets/image_54.png
     - assets/image_49.png
     - assets/product_image.png
+    - google_fonts/
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

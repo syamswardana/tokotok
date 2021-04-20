@@ -55,13 +55,13 @@ class ExplorePage extends StatelessWidget {
               ),
             ),
             Container(
-              height: 180,
+              height: 200,
               width: double.infinity,
               margin: EdgeInsets.symmetric(horizontal: 20),
               child: GridView(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     mainAxisSpacing: 15,
-                    childAspectRatio: 1,
+                    childAspectRatio: 0.9,
                     crossAxisCount: 4),
                 children: [
                   ItemCategory(
@@ -112,13 +112,13 @@ class ExplorePage extends StatelessWidget {
               ),
             ),
             Container(
-              height: 180,
+              height: 200,
               width: double.infinity,
               margin: EdgeInsets.symmetric(horizontal: 20),
               child: GridView(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     mainAxisSpacing: 15,
-                    childAspectRatio: 1,
+                    childAspectRatio: 0.9,
                     crossAxisCount: 4),
                 children: [
                   ItemCategory(

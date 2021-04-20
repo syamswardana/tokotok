@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "769551307940",
+    "project_id": "tokotok-f17e4",
+    "storage_bucket": "tokotok-f17e4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:769551307940:android:15fac16c4ac71b66038231",
+        "android_client_info": {
+          "package_name": "com.example.tokotok"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "769551307940-l14i91sqad5g2jh07bct49r2k19ldhfj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHdl6FFXpCg6AV1q0NTRFU6QVLjd74OPo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "769551307940-l14i91sqad5g2jh07bct49r2k19ldhfj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,5 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tokotok/firebase/auth_services.dart';
 import 'package:tokotok/views/custom_theme.dart';
+import 'package:tokotok/views/navigation.dart';
+import 'package:tokotok/views/registration_form.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -7,10 +13,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // resizeToAvoidBottomInset: false,
       backgroundColor: CustomTheme.Background,
       body: Container(
         padding: EdgeInsets.all(20),
@@ -24,9 +31,9 @@ class _LoginPageState extends State<LoginPage> {
               Center(
                 child: Image.asset(
                   "assets/icons/logo_blue.png",
-                  width: MediaQuery.of(context).size.width * 0.20,
+                  width: MediaQuery.of(context).size.width * 0.15,
                   cacheWidth:
-                      (MediaQuery.of(context).size.width * 0.20).toInt(),
+                      (MediaQuery.of(context).size.width * 0.15).toInt(),
                 ),
               ),
               SizedBox(
@@ -48,6 +55,7 @@ class _LoginPageState extends State<LoginPage> {
                 height: 30,
               ),
               TextFormField(
+                controller: emailController,
                 decoration: InputDecoration(
                     labelText: "Email Anda",
                     prefixIcon: Icon(
@@ -61,6 +69,8 @@ class _LoginPageState extends State<LoginPage> {
                 height: 20,
               ),
               TextFormField(
+                controller: passwordController,
+                obscureText: true,
                 decoration: InputDecoration(
                     labelText: "Password",
                     prefixIcon: Icon(
@@ -74,7 +84,12 @@ class _LoginPageState extends State<LoginPage> {
                 height: 20,
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () async {
+                  await AuthServices.signInEmail(
+                      email: emailController.text,
+                      password: passwordController.text,
+                      context: context);
+                },
                 child: Text(
                   "Sign In",
                   style: TextStyle(fontSize: 16),
@@ -103,13 +118,24 @@ class _LoginPageState extends State<LoginPage> {
                   ))
                 ],
               ),
-              ElevatedButton(
-                onPressed: () {},
-                child: Text("Login with Google"),
+              OutlinedButton.icon(
+                icon: SvgPicture.asset(
+                  "assets/icons/gmail.svg",
+                  height: 20,
+                ),
+                onPressed: () {
+                  Future<UserCredential> user = AuthServices.signInWithGoogle();
+                  user.then((user) {
+                    if (user != null) {
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) {
+                        return Navigation();
+                      }));
+                    }
+                  });
+                },
+                label: Text("Login with Google"),
                 style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all(CustomTheme.Background),
-                  elevation: MaterialStateProperty.all(0),
                   side: MaterialStateProperty.all(
                       BorderSide(color: CustomTheme.Grey)),
                   foregroundColor: MaterialStateProperty.all(CustomTheme.Grey),
@@ -120,13 +146,17 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(
                 height: 20,
               ),
-              ElevatedButton(
-                onPressed: () {},
-                child: Text("Login with Facebook"),
+              OutlinedButton.icon(
+                icon: SvgPicture.asset(
+                  "assets/icons/facebook.svg",
+                  height: 20,
+                ),
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Fitur tidak tersedia")));
+                },
+                label: Text("Login with Facebook"),
                 style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all(CustomTheme.Background),
-                  elevation: MaterialStateProperty.all(0),
                   side: MaterialStateProperty.all(
                       BorderSide(color: CustomTheme.Grey)),
                   foregroundColor: MaterialStateProperty.all(CustomTheme.Grey),
@@ -137,14 +167,18 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(
                 height: 20,
               ),
-              Text(
-                "Lupa Password?",
-                style: TextStyle(
-                    color: CustomTheme.Blue, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                height: 10,
-              ),
+              TextButton(
+                  style: TextButton.styleFrom(
+                      visualDensity: VisualDensity.compact),
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Fitur tidak tersedia")));
+                  },
+                  child: Text(
+                    "Lupa Password?",
+                    style: TextStyle(
+                        color: CustomTheme.Blue, fontWeight: FontWeight.bold),
+                  )),
               RichText(
                   text: TextSpan(
                       text: "Tidak punya akun? ",
@@ -152,6 +186,13 @@ class _LoginPageState extends State<LoginPage> {
                       children: [
                     TextSpan(
                         text: "Registrasi",
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) {
+                              return RegistrationForm();
+                            }));
+                          },
                         style: TextStyle(
                             color: CustomTheme.Blue,
                             fontWeight: FontWeight.bold))

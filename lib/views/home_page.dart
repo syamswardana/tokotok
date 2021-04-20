@@ -1,16 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:tokotok/baseviews/card_product.dart';
 import 'package:tokotok/baseviews/item_category.dart';
 import 'package:tokotok/baseviews/offer_item.dart';
+import 'package:tokotok/firebase/promos_database.dart';
+import 'package:tokotok/models/product.dart';
 import 'package:tokotok/views/custom_theme.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 
 class Homapage extends StatelessWidget {
+  PageController offersController = new PageController();
+  ValueNotifier<int> indexPage = ValueNotifier(0);
   @override
   Widget build(BuildContext context) {
-    PageController offersController = new PageController();
     List<OfferItem> offers = [];
-    int indexPage = 0;
     offers.add(OfferItem(
       title: "Super Flash Sale",
       subtitle: "30 Maret sampai 2 April",
@@ -74,17 +78,22 @@ class Homapage extends StatelessWidget {
               margin: EdgeInsets.fromLTRB(20, 20, 20, 10),
               child: PageView(
                 onPageChanged: (index) {
-                  indexPage = index;
+                  indexPage.value = index;
                 },
                 controller: offersController,
                 children: offers,
               ),
             ),
-            DotsIndicator(
-              dotsCount: offers.length,
-              position: indexPage.toDouble(),
-              decorator: DotsDecorator(
-                  activeColor: CustomTheme.Blue, color: CustomTheme.Grey),
+            ValueListenableBuilder(
+              valueListenable: indexPage,
+              builder: (context, index, _) {
+                return DotsIndicator(
+                  dotsCount: offers.length,
+                  position: index.toDouble(),
+                  decorator: DotsDecorator(
+                      activeColor: CustomTheme.Blue, color: CustomTheme.Grey),
+                );
+              },
             ),
             Container(
               margin: EdgeInsets.fromLTRB(20, 20, 20, 10),
@@ -93,12 +102,12 @@ class Homapage extends StatelessWidget {
                 children: [
                   Text(
                     "Kategori",
-                    style: CustomTheme.Title.copyWith(fontSize: 16),
+                    style: CustomTheme.Title.copyWith(fontSize: 14),
                   ),
                   Text(
                     "Semua Kategori",
                     style: CustomTheme.Title.copyWith(
-                        color: CustomTheme.Blue, fontSize: 16),
+                        color: CustomTheme.Blue, fontSize: 14),
                   ),
                 ],
               ),
@@ -163,12 +172,12 @@ class Homapage extends StatelessWidget {
                 children: [
                   Text(
                     "Flash Sale",
-                    style: CustomTheme.Title.copyWith(fontSize: 16),
+                    style: CustomTheme.Title.copyWith(fontSize: 14),
                   ),
                   Text(
                     "Lihat Semua",
                     style: CustomTheme.Title.copyWith(
-                        color: CustomTheme.Blue, fontSize: 16),
+                        color: CustomTheme.Blue, fontSize: 14),
                   ),
                 ],
               ),
@@ -177,34 +186,59 @@ class Homapage extends StatelessWidget {
               width: double.infinity,
               margin: EdgeInsets.symmetric(horizontal: 20),
               height: 240,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  CardProduct(
-                    productName: "FS - Nike Air Max 270 React lalalalalala",
-                    price: 4000000,
-                    discount: 50,
-                    img: AssetImage("assets/image_46.png"),
-                  ),
-                  CardProduct(
-                    productName: "FS - QUILTED MAXI CROS...",
-                    price: 3000000,
-                    discount: 24,
-                    img: AssetImage("assets/image_54.png"),
-                  ),
-                  CardProduct(
-                    productName: "FS - Nike Air Max 270 React...",
-                    price: 3000000,
-                    discount: 50,
-                    img: AssetImage("assets/image_49.png"),
-                  ),
-                  CardProduct(
-                    productName: "FS - Nike Air Max 270 React lalalalalala",
-                    price: 4000000,
-                    discount: 24,
-                    img: AssetImage("assets/image_46.png"),
-                  ),
-                ],
+              child: FutureBuilder(
+                future: PromosDatabase.getPromo("wvFip99VCUHcMTtqKjr1"),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text("Error Connection");
+                  }
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    List<Product> products = [];
+                    List<QueryDocumentSnapshot> docs =
+                        (snapshot.data as QuerySnapshot).docs;
+                    docs.forEach((element) {
+                      Map<String, dynamic> product = element.data();
+                      products.add(Product(
+                          id: element.id,
+                          productName: product["productName"],
+                          price: product["price"],
+                          discount: product["discount"],
+                          images: product["images"]));
+                    });
+                    return ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: products.length,
+                      itemBuilder: (context, index) {
+                        return CardProduct(
+                          idProduct: products[index].id,
+                          productName: products[index].productName,
+                          price: products[index].price,
+                          discount: products[index].discount,
+                          img: products[index].images[0],
+                        );
+                      },
+                    );
+                  }
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 5,
+                    itemBuilder: (context, index) {
+                      return Shimmer(
+                        gradient: LinearGradient(colors: [
+                          Colors.grey,
+                          Colors.grey[100],
+                          Colors.grey
+                        ]),
+                        child: CardProduct(
+                          productName: "Loading",
+                          price: 3000000,
+                          discount: 0.24,
+                          img: "productImages/no_photo.png",
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
             ),
             Container(
@@ -214,12 +248,12 @@ class Homapage extends StatelessWidget {
                 children: [
                   Text(
                     "Mega Sale",
-                    style: CustomTheme.Title.copyWith(fontSize: 16),
+                    style: CustomTheme.Title.copyWith(fontSize: 14),
                   ),
                   Text(
                     "Lihat Semua",
                     style: CustomTheme.Title.copyWith(
-                        color: CustomTheme.Blue, fontSize: 16),
+                        color: CustomTheme.Blue, fontSize: 14),
                   ),
                 ],
               ),
@@ -228,34 +262,59 @@ class Homapage extends StatelessWidget {
               width: double.infinity,
               margin: EdgeInsets.symmetric(horizontal: 20),
               height: 240,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  CardProduct(
-                    productName: "FS - Nike Air Max 270 React lalalalalala",
-                    price: 4000000,
-                    discount: 50,
-                    img: AssetImage("assets/image_46.png"),
-                  ),
-                  CardProduct(
-                    productName: "FS - QUILTED MAXI CROS...",
-                    price: 3000000,
-                    discount: 24,
-                    img: AssetImage("assets/image_54.png"),
-                  ),
-                  CardProduct(
-                    productName: "FS - Nike Air Max 270 React...",
-                    price: 3000000,
-                    discount: 50,
-                    img: AssetImage("assets/image_49.png"),
-                  ),
-                  CardProduct(
-                    productName: "FS - Nike Air Max 270 React lalalalalala",
-                    price: 4000000,
-                    discount: 24,
-                    img: AssetImage("assets/image_46.png"),
-                  ),
-                ],
+              child: FutureBuilder(
+                future: PromosDatabase.getPromo("GRUD4DlBMRv2Troy9qsY"),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text("Error Connection");
+                  }
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    List<Product> products = [];
+                    List<QueryDocumentSnapshot> docs =
+                        (snapshot.data as QuerySnapshot).docs;
+                    docs.forEach((element) {
+                      Map<String, dynamic> product = element.data();
+                      products.add(Product(
+                          id: element.id,
+                          productName: product["productName"],
+                          price: product["price"],
+                          discount: product["discount"],
+                          images: product["images"]));
+                    });
+                    return ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: products.length,
+                      itemBuilder: (context, index) {
+                        return CardProduct(
+                          idProduct: products[index].id,
+                          productName: products[index].productName,
+                          price: products[index].price,
+                          discount: products[index].discount,
+                          img: products[index].images[0],
+                        );
+                      },
+                    );
+                  }
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 5,
+                    itemBuilder: (context, index) {
+                      return Shimmer(
+                        gradient: LinearGradient(colors: [
+                          Colors.grey,
+                          Colors.grey[100],
+                          Colors.grey
+                        ]),
+                        child: CardProduct(
+                          productName: "Loading",
+                          price: 3000000,
+                          discount: 0.24,
+                          img: "productImages/no_photo.png",
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
             )
           ],

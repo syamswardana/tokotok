@@ -1,12 +1,19 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:tokotok/firebase/auth_services.dart';
 import 'package:tokotok/views/custom_theme.dart';
 
-class LoginForm extends StatefulWidget {
+class RegistrationForm extends StatefulWidget {
   @override
-  _LoginFormState createState() => _LoginFormState();
+  _RegistrationFormState createState() => _RegistrationFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _RegistrationFormState extends State<RegistrationForm> {
+  TextEditingController nameController = TextEditingController(text: "");
+  TextEditingController emailController = TextEditingController(text: "");
+  TextEditingController passwordController = TextEditingController(text: "");
+  TextEditingController rePasswordController = TextEditingController(text: "");
+  ValueNotifier<bool> rePasswordError = ValueNotifier(false);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,9 +29,9 @@ class _LoginFormState extends State<LoginForm> {
               Center(
                 child: Image.asset(
                   "assets/icons/logo_blue.png",
-                  width: MediaQuery.of(context).size.width * 0.20,
+                  width: MediaQuery.of(context).size.width * 0.15,
                   cacheWidth:
-                      (MediaQuery.of(context).size.width * 0.20).toInt(),
+                      (MediaQuery.of(context).size.width * 0.15).toInt(),
                 ),
               ),
               SizedBox(
@@ -46,6 +53,7 @@ class _LoginFormState extends State<LoginForm> {
                 height: 30,
               ),
               TextFormField(
+                controller: nameController,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     isDense: true,
@@ -56,6 +64,7 @@ class _LoginFormState extends State<LoginForm> {
                 height: 20,
               ),
               TextFormField(
+                controller: emailController,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     isDense: true,
@@ -66,6 +75,7 @@ class _LoginFormState extends State<LoginForm> {
                 height: 20,
               ),
               TextFormField(
+                controller: passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
@@ -76,19 +86,50 @@ class _LoginFormState extends State<LoginForm> {
               SizedBox(
                 height: 20,
               ),
-              TextFormField(
-                obscureText: true,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    isDense: true,
-                    prefixIcon: Icon(Icons.lock),
-                    labelText: "Tulis Ulang Password"),
-              ),
+              ValueListenableBuilder(
+                  valueListenable: rePasswordError,
+                  builder: (context, error, _) {
+                    return TextFormField(
+                      controller: rePasswordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          isDense: true,
+                          prefixIcon: Icon(Icons.lock),
+                          labelText: "Tulis Ulang Password"),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (text) {
+                        return (error) ? "Password tidak sama" : null;
+                      },
+                      onChanged: (text) {
+                        rePasswordError.value = false;
+                      },
+                    );
+                  }),
               SizedBox(
                 height: 20,
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () async {
+                  String msg = "Error";
+                  if (nameController.text == "" ||
+                      emailController.text == "" ||
+                      passwordController.text == "" ||
+                      rePasswordController.text == "") {
+                    msg = "Mohon isi semua data";
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text(msg)));
+                  } else if (passwordController.text !=
+                      rePasswordController.text) {
+                    rePasswordError.value = true;
+                  } else {
+                    await AuthServices.signUpEmail(
+                        email: emailController.text,
+                        password: passwordController.text,
+                        context: context);
+                    Navigator.pop(context);
+                  }
+                },
                 child: Text(
                   "Sign Up",
                   style: TextStyle(fontSize: 16),
@@ -109,6 +150,10 @@ class _LoginFormState extends State<LoginForm> {
                       children: [
                     TextSpan(
                         text: "Sign In",
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            Navigator.pop(context);
+                          },
                         style: TextStyle(
                             color: CustomTheme.Blue,
                             fontWeight: FontWeight.bold))

@@ -1,36 +1,49 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:tokotok/views/home_page.dart';
-import 'package:tokotok/views/login_form.dart';
-import 'package:tokotok/views/login_page.dart';
-import 'package:tokotok/views/navigation.dart';
-import 'package:tokotok/views/product_detail.dart';
-import 'package:tokotok/views/shiping_page.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:tokotok/bloc/cart_bloc.dart';
+import 'package:tokotok/views/splash_screen.dart';
+import 'package:tokotok/views/wrapper.dart';
 
 void main() {
+  LicenseRegistry.addLicense(() async* {
+    final license = await rootBundle.loadString('google_fonts/OFL.txt');
+    yield LicenseEntryWithLineBreaks(['google_fonts'], license);
+  });
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: ShippingPage(),
-    );
-  }
-}
-
-class Splash extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFF40BFFF),
-      body: Center(
-        child: Image.asset(
-          "assets/icons/logo_white.png",
-          width: MediaQuery.of(context).size.width * 0.25,
-        ),
+      theme: ThemeData(textTheme: GoogleFonts.poppinsTextTheme()),
+      home: FutureBuilder(
+        future: _initialization,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                "Error Connecton",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            );
+          }
+          if (snapshot.connectionState == ConnectionState.done) {
+            return BlocProvider(
+              create: (context) => CartBloc(),
+              child: Wrapper(),
+            );
+          }
+          return SplashScreen();
+        },
       ),
     );
   }
