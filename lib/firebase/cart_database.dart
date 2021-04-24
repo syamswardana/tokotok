@@ -31,4 +31,16 @@ class CartDatabase {
   static Future<void> deleteCart(String id) async {
     return _cart.doc(id).delete();
   }
+
+  static Future<void> batchDelete(String uid) {
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
+    return _cart.where("uid", isEqualTo: uid).get().then((querySnapshot) {
+      querySnapshot.docs.forEach((document) {
+        batch.delete(document.reference);
+      });
+
+      return batch.commit();
+    });
+  }
 }

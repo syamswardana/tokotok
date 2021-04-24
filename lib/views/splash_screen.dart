@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SplashScreen extends StatelessWidget {
   @override
@@ -6,9 +7,9 @@ class SplashScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Color(0xFF40BFFF),
       body: Center(
-        child: Image.asset(
-          "assets/icons/logo_white.png",
-          width: MediaQuery.of(context).size.width * 0.25,
+        child: SvgPicture.asset(
+          "assets/icons/logo_white.svg",
+          width: MediaQuery.of(context).size.width / 4,
         ),
       ),
     );

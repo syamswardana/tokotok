@@ -12,6 +12,7 @@ import 'package:tokotok/firebase/products_database.dart';
 import 'package:tokotok/views/custom_theme.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
+// ignore: must_be_immutable
 class ProductDetail extends StatelessWidget {
   final String idProduct;
 

@@ -69,8 +69,8 @@ flutter:
     - assets/icons/woman_shoes.svg
     - assets/icons/woman_bikini.svg
     - assets/icons/woman_skirt.svg
-    - assets/icons/logo_white.png
-    - assets/icons/logo_blue.png
+    - assets/icons/logo_blue.svg
+    - assets/icons/logo_white.svg
     - assets/icons/facebook.svg
     - assets/icons/gmail.svg
     - assets/image_46.png

@@ -16,4 +16,15 @@ class ProductCart {
       @required this.discount,
       @required this.quantity,
       @required this.images});
+
+  Map<String, dynamic> toMap() {
+    return {
+      "idProduct": this.idProduct,
+      "productName": this.productName,
+      "price": this.price,
+      "discount": this.discount,
+      "quantity": this.quantity,
+      "images": this.images,
+    };
+  }
 }

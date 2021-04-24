@@ -9,6 +9,7 @@ import 'package:tokotok/models/product.dart';
 import 'package:tokotok/views/custom_theme.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 
+// ignore: must_be_immutable
 class Homapage extends StatelessWidget {
   PageController offersController = new PageController();
   ValueNotifier<int> indexPage = ValueNotifier(0);

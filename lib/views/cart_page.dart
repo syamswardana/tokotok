@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -10,8 +11,13 @@ import 'package:tokotok/firebase/cart_database.dart';
 import 'package:tokotok/firebase/firestorage.dart';
 import 'package:tokotok/models/product_cart.dart';
 import 'package:tokotok/views/custom_theme.dart';
+import 'package:tokotok/views/shiping_page.dart';
 
+// ignore: must_be_immutable
 class CartPage extends StatelessWidget {
+  ValueNotifier<bool> _errorVoucher = ValueNotifier(false);
+  TextEditingController _voucherController = TextEditingController(text: "");
+
   void reloadCart(BuildContext context) async {
     User user = await AuthServices.getCurrentUser();
     context.read<CartBloc>().add(LoadCart(uid: user.uid));
@@ -29,14 +35,33 @@ class CartPage extends StatelessWidget {
         backgroundColor: CustomTheme.Background,
         elevation: 0.5,
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: BlocBuilder<CartBloc, CartState>(
-              builder: (context, state) {
-                if (state is CartLoaded) {
-                  List<ProductCart> products = state.products;
-                  return ListView.builder(
+      body: BlocBuilder<CartBloc, CartState>(
+        builder: (context, state) {
+          if (state is CartLoaded) {
+            if (state.products.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.shopping_cart_outlined,
+                      color: CustomTheme.Grey,
+                      size: 120,
+                    ),
+                    Text("Keranjang Kosong",
+                        style: TextStyle(
+                          color: CustomTheme.Grey,
+                          fontWeight: FontWeight.bold,
+                        ))
+                  ],
+                ),
+              );
+            }
+            List<ProductCart> products = state.products;
+            return Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
                       shrinkWrap: true,
                       itemCount: products.length,
                       itemBuilder: (context, index) {
@@ -49,120 +74,157 @@ class CartPage extends StatelessWidget {
                           quantity: products[index].quantity,
                           image: products[index].images,
                         );
-                      });
-                }
-                if (state is CartError) {
-                  return Center(
-                    child: Text("Error"),
-                  );
-                }
-                return Shimmer.fromColors(
-                    child: ItemCart(
-                      productName: "Nike Air Zoom Pegasus 36 Miami",
-                      image: null,
-                      price: 2000000,
-                      favorite: false,
-                    ),
-                    baseColor: Colors.grey[300],
-                    highlightColor: Colors.grey[100]);
-              },
-            ),
-          ),
-          Container(
-            height: 160,
-            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.grey)],
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flex(
-                  direction: Axis.horizontal,
-                  children: [
-                    Flexible(
-                      child: TextField(
-                        decoration: InputDecoration(
-                            hintText: "Masukan code voucher",
-                            hintStyle: TextStyle(
-                                color: CustomTheme.Grey, fontSize: 12),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(3),
-                                  bottomLeft: Radius.circular(3)),
-                              borderSide: BorderSide(
-                                color: CustomTheme.Light,
-                              ),
+                      }),
+                ),
+                Container(
+                  height: 180,
+                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [BoxShadow(color: Colors.grey)],
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flex(
+                        direction: Axis.horizontal,
+                        children: [
+                          Flexible(
+                            child: ValueListenableBuilder(
+                              valueListenable: _errorVoucher,
+                              builder: (context, error, _) {
+                                return TextFormField(
+                                  controller: _voucherController,
+                                  autovalidateMode: AutovalidateMode.always,
+                                  validator: (string) {
+                                    return error ? "voucher salah" : null;
+                                  },
+                                  onTap: () {
+                                    _errorVoucher.value = false;
+                                  },
+                                  decoration: InputDecoration(
+                                      hintText: "Masukan code voucher",
+                                      hintStyle: TextStyle(
+                                          color: CustomTheme.Grey,
+                                          fontSize: 12),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(3),
+                                            bottomLeft: Radius.circular(3)),
+                                        borderSide: BorderSide(
+                                          color: CustomTheme.Light,
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(3),
+                                            bottomLeft: Radius.circular(3)),
+                                        borderSide: BorderSide(
+                                          color: CustomTheme.Blue,
+                                        ),
+                                      ),
+                                      isDense: true,
+                                      contentPadding: EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 8)),
+                                );
+                              },
                             ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(3),
-                                  bottomLeft: Radius.circular(3)),
-                              borderSide: BorderSide(
-                                color: CustomTheme.Blue,
-                              ),
-                            ),
-                            isDense: true,
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 8)),
-                      ),
-                      flex: 3,
-                    ),
-                    Flexible(
-                        flex: 1,
-                        fit: FlexFit.tight,
-                        child: OutlinedButton(
-                          onPressed: () {},
-                          child: Text(
-                            "Check",
-                            style: TextStyle(color: Colors.white),
+                            flex: 3,
                           ),
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(CustomTheme.Blue),
-                            side: MaterialStateProperty.all(BorderSide.none),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(3),
-                                  bottomRight: Radius.circular(3),
+                          Flexible(
+                              flex: 1,
+                              fit: FlexFit.tight,
+                              child: OutlinedButton(
+                                onPressed: () {
+                                  if (_voucherController.text != "") {
+                                    _errorVoucher.value = true;
+                                  }
+                                  print(_errorVoucher.value);
+                                },
+                                child: Text(
+                                  "Check",
+                                  style: TextStyle(color: Colors.white),
                                 ),
-                              ),
-                            ),
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                      CustomTheme.Blue),
+                                  side: MaterialStateProperty.all(
+                                      BorderSide.none),
+                                  shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(3),
+                                        bottomRight: Radius.circular(3),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ))
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Total : ",
+                            style: TextStyle(
+                                color: CustomTheme.Dark,
+                                fontWeight: FontWeight.bold),
                           ),
-                        ))
-                  ],
+                          BlocBuilder<CartBloc, CartState>(
+                            builder: (context, state) {
+                              return Text(
+                                state is CartInitial
+                                    ? "-"
+                                    : NumberFormat.currency(
+                                            decimalDigits: 0,
+                                            locale: "id",
+                                            symbol: "Rp. ")
+                                        .format((state as CartLoaded).total),
+                                style: TextStyle(
+                                    color: CustomTheme.Blue,
+                                    fontWeight: FontWeight.bold),
+                              );
+                            },
+                          )
+                        ],
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return ShippingPage();
+                          }));
+                        },
+                        child: Text("Checkout"),
+                        style: ButtonStyle(
+                            minimumSize: MaterialStateProperty.all(Size(
+                                MediaQuery.of(context).size.width - 40, 40)),
+                            backgroundColor:
+                                MaterialStateProperty.all(CustomTheme.Blue)),
+                      )
+                    ],
+                  ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Total : ",
-                      style: TextStyle(
-                          color: CustomTheme.Dark, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      "Rp. 4000000",
-                      style: TextStyle(
-                          color: CustomTheme.Blue, fontWeight: FontWeight.bold),
-                    )
-                  ],
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Text("Checkout"),
-                  style: ButtonStyle(
-                      minimumSize: MaterialStateProperty.all(
-                          Size(MediaQuery.of(context).size.width - 40, 40)),
-                      backgroundColor:
-                          MaterialStateProperty.all(CustomTheme.Blue)),
-                )
               ],
-            ),
-          ),
-        ],
+            );
+          }
+          if (state is CartError) {
+            return Center(
+              child: Text("Error"),
+            );
+          }
+          return Shimmer.fromColors(
+              child: ItemCart(
+                productName: "Nike Air Zoom Pegasus 36 Miami",
+                image: null,
+                price: 2000000,
+                favorite: false,
+              ),
+              baseColor: Colors.grey[300],
+              highlightColor: Colors.grey[100]);
+        },
       ),
     );
   }

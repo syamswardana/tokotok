@@ -22,6 +22,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       }
       try {
         List<ProductCart> products = [];
+        int total = 0;
         List<QueryDocumentSnapshot> docs =
             await CartDatabase.getCart(event.uid);
         for (var i = 0; i < docs.length; i++) {
@@ -35,25 +36,29 @@ class CartBloc extends Bloc<CartEvent, CartState> {
               discount: snapshot["discount"],
               quantity: docs[i]["quantity"],
               images: snapshot["images"][0]));
+          total += snapshot["price"] * docs[i]["quantity"];
         }
-        yield CartLoaded(products: products);
+        yield CartLoaded(products: products, total: total);
       } catch (e) {
         yield CartError();
       }
     } else if (event is DeleteCart) {
       if (state is CartLoaded) {
+        int total = 0;
         List<ProductCart> products = [];
         List<ProductCart> temp = (state as CartLoaded).products;
 
         for (var i = 0; i < temp.length; i++) {
           if (temp[i].id != event.id) {
             products.add(temp[i]);
+            total += temp[i].price * temp[i].quantity;
           }
         }
-        yield CartLoaded(products: products);
+        yield CartLoaded(products: products, total: total);
       }
     } else if (event is SetQuantity) {
       if (state is CartLoaded) {
+        int total = 0;
         List<ProductCart> products = [];
         List<ProductCart> temp = (state as CartLoaded).products;
         for (var i = 0; i < temp.length; i++) {
@@ -66,11 +71,13 @@ class CartBloc extends Bloc<CartEvent, CartState> {
                 discount: temp[i].discount,
                 quantity: event.quantity,
                 images: temp[i].images));
+            total += temp[i].price * event.quantity;
           } else {
             products.add(temp[i]);
+            total += temp[i].price * temp[i].quantity;
           }
         }
-        yield CartLoaded(products: products);
+        yield CartLoaded(products: products, total: total);
       }
     }
   }

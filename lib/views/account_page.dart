@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tokotok/firebase/auth_services.dart';
 import 'package:tokotok/views/custom_theme.dart';
+import 'package:tokotok/views/order_page.dart';
+import 'package:tokotok/views/shiping_page.dart';
+import 'package:tokotok/views/success_page.dart';
 
 class AccountPage extends StatelessWidget {
   @override
@@ -25,7 +28,10 @@ class AccountPage extends StatelessWidget {
         child: Column(
           children: [
             TextButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Fitur belum tersedia")));
+              },
               icon: Icon(
                 Icons.person_outline,
                 color: CustomTheme.Blue,
@@ -37,7 +43,12 @@ class AccountPage extends StatelessWidget {
               style: menuStyle,
             ),
             TextButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return OrderPage();
+                }));
+              },
               icon: Icon(
                 Icons.date_range,
                 color: CustomTheme.Blue,
@@ -49,7 +60,14 @@ class AccountPage extends StatelessWidget {
               style: menuStyle,
             ),
             TextButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return ShippingPage(
+                    isManage: true,
+                  );
+                }));
+              },
               icon: Icon(
                 Icons.location_pin,
                 color: CustomTheme.Blue,
@@ -61,7 +79,14 @@ class AccountPage extends StatelessWidget {
               style: menuStyle,
             ),
             TextButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Fitur belum tersedia")));
+                // Navigator.of(context)
+                //     .push(MaterialPageRoute(builder: (context) {
+                //   return SuccessPage();
+                // }));
+              },
               icon: Icon(
                 Icons.mobile_friendly_outlined,
                 color: CustomTheme.Blue,

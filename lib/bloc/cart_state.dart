@@ -11,10 +11,11 @@ class CartInitial extends CartState {}
 
 class CartLoaded extends CartState {
   final List<ProductCart> products;
-  CartLoaded({this.products});
+  final int total;
+  CartLoaded({this.products, this.total});
 
   @override
-  List<Object> get props => [products];
+  List<Object> get props => [products, total];
 }
 
 class CartError extends CartState {}

@@ -29,15 +29,13 @@ class _LoginPageState extends State<LoginPage> {
                 height: MediaQuery.of(context).size.width * 0.10,
               ),
               Center(
-                child: Image.asset(
-                  "assets/icons/logo_blue.png",
-                  width: MediaQuery.of(context).size.width * 0.15,
-                  cacheWidth:
-                      (MediaQuery.of(context).size.width * 0.15).toInt(),
+                child: SvgPicture.asset(
+                  "assets/icons/logo_blue.svg",
+                  width: MediaQuery.of(context).size.width / 5,
                 ),
               ),
               SizedBox(
-                height: 20,
+                height: 15,
               ),
               Text(
                 "Selamat datang di Tototok",
@@ -45,14 +43,14 @@ class _LoginPageState extends State<LoginPage> {
                 style: CustomTheme.Title,
               ),
               SizedBox(
-                height: 10,
+                height: 5,
               ),
               Text(
                 "Sign in untuk melanjutkan",
                 style: TextStyle(color: CustomTheme.Grey),
               ),
               SizedBox(
-                height: 30,
+                height: 20,
               ),
               TextFormField(
                 controller: emailController,
@@ -165,7 +163,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               SizedBox(
-                height: 20,
+                height: 10,
               ),
               TextButton(
                   style: TextButton.styleFrom(

@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tokotok/firebase/auth_services.dart';
 import 'package:tokotok/views/custom_theme.dart';
 
@@ -27,11 +28,9 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 height: MediaQuery.of(context).size.width * 0.10,
               ),
               Center(
-                child: Image.asset(
-                  "assets/icons/logo_blue.png",
-                  width: MediaQuery.of(context).size.width * 0.15,
-                  cacheWidth:
-                      (MediaQuery.of(context).size.width * 0.15).toInt(),
+                child: SvgPicture.asset(
+                  "assets/icons/logo_blue.svg",
+                  width: MediaQuery.of(context).size.width / 5,
                 ),
               ),
               SizedBox(
